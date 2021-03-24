@@ -1,0 +1,22 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+
+.posts {
+    .avatar {
+        border-radius: 6px;
+    }
+
+    .content {
+        margin-top: 0;
+    }
+}
+
+.flex {
+    display: flex;
+}

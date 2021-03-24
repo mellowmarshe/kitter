@@ -1,0 +1,36 @@
+[package]
+name = "kitter"
+version = "0.1.0"
+authors = ["Dominic Harris <tastykake563@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "3"
+actix-rt = "2.1.0"
+actix-service = "1.0.6"
+actix-session = "0.4.0"
+actix-redis = "0.9.1"
+actix-files = "0.5.0"
+actix-cors = "0.5.4"
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.64"
+
+toml = "0.5"
+futures = "0.3"
+once_cell = "1.7.2"
+chrono = { version = "0.4.19", features = ["serde"] }
+tera = "1.7.0"
+lazy_static = "1.4.0"
+sqlx = { version = "0.4", features = ["postgres", "runtime-tokio-rustls", "migrate", "chrono"] }
+reqwest =  { version = "0.10.0", git = "https://github.com/seanmonstar/reqwest", branch = "0.10.x", features = ["json", "rustls-tls"] }
+
+[profile.release]
+codegen-units = 1
+debug = false
+incremental = false
+lto = true
+opt-level = 3
+panic = "abort"

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kitter</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="/styles/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- 
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item is-size-4 is-black" href="#"><strong>Kitter</strong></a>
+            <div class="navbar-burger burger" data-target="navbarBasic">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div id="navbarBasic" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item is-black">home</a>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    {% if user %}
+                    <a class="button is-black" href="/auth/logout">
+                        <strong>{{ user.login }}</strong>
+                    </a>
+                    {% else %}
+                    <a class="button is-black" href="/auth/login">
+                        <strong>Log in</strong>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    -->
+
+    {% block content %}
+    {% endblock content %}
+
+    <script src="/js/index.js"></script>
+</body>
+
+</html>
