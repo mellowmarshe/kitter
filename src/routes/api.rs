@@ -46,13 +46,12 @@ async fn add(
     }
 }
 
-#[get("/post/posts")]
+#[post("/post/posts")]
 async fn posts(
     data: web::Data<AppState>,
-    session: Session,
     paged: Option<web::Json<post::PagedPosts>>,
 ) -> impl Responder {
-    let mut res;
+    let res;
 
     if let Some(p) = paged {
         res = data.db.get_paged_posts(&p).await;
