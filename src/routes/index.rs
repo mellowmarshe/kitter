@@ -23,31 +23,23 @@ lazy_static! {
 
 #[get("/")]
 async fn index(data: web::Data<AppState>, session: Session) -> impl Responder {
-    let res = &data.db.get_all_posts().await;
-
-    if let Err(e) = res {
-        println!("{}", e);
-        return HttpResponse::InternalServerError().json(general::Error {
-            status_code: "500".to_string(),
-            error: "Error retrieving posts.".to_string(),
-        });
-    }
-
     let mut context = Context::new();
 
     let user = session.get::<User>("user");
+
+    let mut template = "notloggedin.html";
 
     if let Ok(_u) = user {
         if let Some(u) = _u {
             context.insert("user", &u.clone());
 
             let _ = &data.db.update_changed_usernames(&u).await;
+
+            template = "index.html";
         }
     }
 
-    context.insert("posts", &res.as_ref().unwrap());
-
-    match TEMPLATES.render("index.html", &context) {
+    match TEMPLATES.render(template, &context) {
         Ok(t) => HttpResponse::Ok()
             .header("Content-Type", "text/html; charset=utf-8")
             .body(t),

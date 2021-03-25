@@ -2,6 +2,10 @@
 
 {% block content %}
 
+<script>
+    const user = "{{ user.id }}";
+</script>
+
 <div class="container content is-mobile mt-15">
     <div id="post-modal" class="modal is-justify-content-center" hidden>
         <div class="modal-background"></div>
@@ -15,7 +19,7 @@
                             placeholder="Post content; up to 512 characters."></textarea>
                     </div>
                 </div>
-                <button class="button is-black">Post</button>
+                <input class="button is-black" type="submit" value="Post">
                 <button class="modal-close is-large" id="post-close" aria-label="close"></button>
             </form>
         </div>
@@ -34,110 +38,12 @@
     </div>
 
     <div class="columns">
-        <div class="posts column is-three-fifths">
-            {% if posts | length == 0 %}
-            <div class="box is-dark">
-                <article class="media">
-                    <div class="media-content">
-                        <div class="content">
-                            <p>
-                                <strong>SYSTEM</strong>
-                                <br>
-                                No posts yet...
-                            </p>
-                        </div>
-                    </div>
-                </article>
-            </div>
-            {% endif %}
-            {% for post in posts %}
-            <div class="box is-dark  post-{{ post.id }}">
-                <article class="media">
-                    <div class="media-left">
-                        <figure class="image is-64x64">
-                            <img src="https://i.imgur.com/z6g7ZiE.jpg" alt="Image">
-                        </figure>
-                    </div>
-                    <div class="media-content">
-                        <div class="content">
-                            <p>
-                                <strong>@{{ post.author }}</strong> <span id="time-{{ post.id }}">
-                                    <small>
-                                        <script>
-                                            document.getElementById("time-{{ post.id }}").innerHTML = new Date("{{ post.timestamp }}").toLocaleString();
-                                        </script>
-                                    </small>
-                                </span>
-                                <br>
-                                <span style="white-space: pre-wrap;">{{ post.content }}</span>
-                            </p>
-                        </div>
-                        <nav class="level is-mobile">
-                            <div class="level-left">
-                                <a class="level-item" aria-label="reply">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-reply is-black"></i>
-                                    </span>
-                                </a>
-                                <a class="level-item" aria-label="like">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-heart is-black"></i>
-                                    </span>
-                                </a>
-                            </div>
-                            <div class="level-right">
-                                <a class="level-item">
-                                    <div class="dropdown dropdown-{{ post.id }}">
-                                        <script>
-
-                                            $("body").on("click", ".dropdown-{{ post.id }}", function (e) {
-                                                e.stopPropagation();
-
-                                                let dropdown = document.querySelector('.dropdown-{{ post.id }}');
-                                                dropdown.classList.toggle('is-active');
-                                            });
-                                        </script>
-                                        <div class="dropdown-trigger">
-                                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu2">
-                                                <span class="icon is-small">
-                                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                        <div class="dropdown-menu" id="dropdown-menu2" role="menu">
-                                            <div class="dropdown-content">
-                                                <div class="dropdown-item">
-                                                    <a href="#" class="dropdown-item">
-                                                        Report
-                                                    </a>
-                                                </div>
-                                                {% if user %}
-                                                {% if post.author_id == user.id %}
-                                                <div class="dropdown-item">
-                                                    <a href="#" class="dropdown-item" id="dropdown-delete"
-                                                        value="{{ post.id }}">
-                                                        Delete
-                                                    </a>
-                                                </div>
-                                                {% endif %}
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </nav>
-                    </div>
-                </article>
-            </div>
-            {% endfor %}
-        </div>
+        <div id="posts" class="posts column is-three-fifths"></div>
 
         <!-- owo -->
 
         <div class="controls column">
             <div class="buttons">
-                {% if user %}
                 <a class="button is-black" href="/auth/logout">
                     <strong>{{ user.login }}</strong>
                 </a>
@@ -147,11 +53,6 @@
                 <a class="button is-black" value="settings" id="settings-button" href="#">
                     <i class="fa fa-cog"></i>
                 </a>
-                {% else %}
-                <a class="button is-black" href="/auth/login">
-                    <strong>Log in with GitHub</strong>
-                </a>
-                {% endif %}
             </div>
             <div class="box">
                 <strong>More to come here!</strong>
@@ -167,7 +68,8 @@
                     <div class="content">
                         <p>
                             <strong>Kitter made with <i class="fa fa-heart"></i> using <a
-                                    href="https://bulma.io">Bulma</a> by Dom.</strong>
+                                    href="https://bulma.io">Bulma</a> by Dom. Source can be found <a
+                                    href="https://github.com/Domterion/kitter">here!</a></strong>
 
                         </p>
                     </div>

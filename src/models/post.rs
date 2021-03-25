@@ -21,6 +21,15 @@ pub struct Post {
     pub timestamp: DateTime<Utc>,
 }
 
+#[derive(Serialize, Deserialize, FromRow, Clone, Debug)]
+pub struct PostWithOwner {
+    pub id: i32,
+    pub author: String,
+    pub author_id: i64,
+    pub content: String,
+    pub timestamp: DateTime<Utc>,
+}
+
 pub fn verify(content: Option<String>) -> bool {
     if content.is_none() {
         return false;
