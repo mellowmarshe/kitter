@@ -1,8 +1,4 @@
-use crate::models::{
-    general,
-    github::{self, User},
-    post,
-};
+use crate::models::{general, github::User, post};
 use crate::utils;
 use crate::AppState;
 use actix_session::Session;

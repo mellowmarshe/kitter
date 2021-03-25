@@ -1,5 +1,5 @@
 use crate::constants;
-use crate::models::{general, github::User};
+use crate::models::github::User;
 use actix_service::{Service, Transform};
 use actix_session::UserSession;
 use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error, HttpResponse};

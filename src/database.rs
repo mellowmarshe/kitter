@@ -1,7 +1,7 @@
 use crate::{
     constants,
     models::{
-        github::{IdOnlyGithub, User},
+        github::User,
         post::{IdOnlyPost, NewPost, PagedPosts, Post},
     },
 };

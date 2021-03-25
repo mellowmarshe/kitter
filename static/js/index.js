@@ -72,7 +72,7 @@ function add_post(post, first) {
                             <div class="level-left">
                                 <a class="level-item" aria-label="reply">
                                     <span class="icon is-small">
-                                        <i class="fa fa-reply is-black"></i>
+                                        <i class="fa fa-reply is-black"></i><small>owo</small>
                                     </span>
                                 </a>
                                 <a class="level-item" aria-label="like">

@@ -12,7 +12,7 @@ mod utils;
 use actix_cors::Cors;
 use actix_files::Files;
 use actix_redis::RedisSession;
-use actix_web::{http, web, App, HttpServer};
+use actix_web::{web, App, HttpServer};
 use routes::{api, auth, index};
 use std::error::Error;
 
