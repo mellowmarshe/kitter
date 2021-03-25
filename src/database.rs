@@ -99,10 +99,12 @@ impl ConnectionPool {
     ) -> Result<Post, sqlx::Error> {
         let p = self.get_post_by_id(&post).await?;
 
-        let mut query = "UPDATE posts SET hearts = hearts + 1, hearted_users = ARRAY_APPEND(hearted_users, $1) WHERE id = $2 RETURNING *";
+        let mut query = "UPDATE posts SET hearted_users = ARRAY_APPEND(hearted_users, $1), hearts = hearts + 1 WHERE id = $2 RETURNING *";
 
         if p.hearted_users.contains(&user.id) {
-            query = "UPDATE posts SET hearts = hearts - 1, hearted_users = ARRAY_REMOVE(hearted_users, $1) WHERE id = $2 RETURNING *";
+            query = "UPDATE posts SET hearted_users = ARRAY_REMOVE(hearted_users, $1), 
+            hearts = COALESCE(ARRAY_LENGTH(hearted_users, 1) - 1, 0)
+            WHERE id = $2 RETURNING *";
         }
 
         sqlx::query_as::<_, Post>(query)

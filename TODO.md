@@ -16,6 +16,7 @@
 - [x] Add liking to posts...
 
   - This has been done but we are calling them hearts on kitter.
+  - You are able to heart your own post and I intend on keeping this.
 
 - [ ] Comments and nested comments... hopefully.
 
@@ -29,6 +30,9 @@
 
 - [ ] Mobile.. this is in QOL because I am honestly too lazy to prioritize it... sorry mobile users.
 
+- [ ] Change heart button color if you like a post.
+
 ## Bugs
 
-None _yet_
+- [x] A bug with hearts where spam clicking would either subtract or add one to the total count.
+  - Fix was to loosely base count off the hearted_users array
