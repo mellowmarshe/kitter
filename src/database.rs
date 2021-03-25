@@ -2,7 +2,7 @@ use crate::{
     constants,
     models::{
         github::{IdOnlyGithub, User},
-        post::{IdOnlyPost, NewPost, Post},
+        post::{IdOnlyPost, NewPost, PagedPosts, Post},
     },
 };
 
@@ -49,6 +49,14 @@ impl ConnectionPool {
 
     pub async fn get_all_posts(&self) -> Result<Vec<Post>, sqlx::Error> {
         sqlx::query_as::<_, Post>("SELECT * FROM posts ORDER BY timestamp DESC")
+            .fetch_all(&self.pool)
+            .await
+    }
+
+    pub async fn get_paged_posts(&self, paged: &PagedPosts) -> Result<Vec<Post>, sqlx::Error> {
+        sqlx::query_as::<_, Post>("SELECT * FROM posts ORDER BY timestamp DESC OFFSET $1 LIMIT $2")
+            .bind(paged.offset)
+            .bind(paged.limit)
             .fetch_all(&self.pool)
             .await
     }

@@ -103,15 +103,17 @@ function add_post(post, first) {
 
 /*
 
-Load
+Ready
 
 */
 
 $(document).ready(function () {
+    var json = `{"offset": 0, "limit": 2}`
     $.ajax({
         url: "/api/post/posts",
         type: 'GET',
         dataType: 'json',
+        data: json,
         contentType: 'application/json',
         processData: false,
         complete: function (xhr, text) {

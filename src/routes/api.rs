@@ -47,8 +47,18 @@ async fn add(
 }
 
 #[get("/post/posts")]
-async fn posts(data: web::Data<AppState>) -> impl Responder {
-    let res = &data.db.get_all_posts().await;
+async fn posts(
+    data: web::Data<AppState>,
+    session: Session,
+    paged: Option<web::Json<post::PagedPosts>>,
+) -> impl Responder {
+    let mut res;
+
+    if let Some(p) = paged {
+        res = data.db.get_paged_posts(&p).await;
+    } else {
+        res = data.db.get_all_posts().await;
+    }
 
     match res {
         Err(_) => {

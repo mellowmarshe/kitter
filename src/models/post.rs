@@ -7,6 +7,12 @@ pub struct IdOnlyPost {
     pub id: i32,
 }
 #[derive(Serialize, Deserialize, FromRow, Clone, Debug)]
+pub struct PagedPosts {
+    pub offset: i64,
+    pub limit: i64,
+}
+
+#[derive(Serialize, Deserialize, FromRow, Clone, Debug)]
 pub struct NewPost {
     pub author: Option<String>,
     pub author_id: Option<i64>,
