@@ -7,6 +7,8 @@
 
 - [ ] User profiles... load GitHub bio on first login to description and allow changing.
 
+- [ ] Add profile picture support via GitHub.
+
 - [ ] MAYBE site staff badge on tweets or special color.
 
 - [ ] Allow following users so you only see their tweets. Site staff tweets will always be seen no matter if following or not.
@@ -24,3 +26,7 @@
 - [ ] Add a "SYSTEM" message if no posts are found.
 
 - [ ] Mobile.. this is in QOL because I am honestly too lazy to prioritize it... sorry mobile users.
+
+## Bugs
+
+None _yet_

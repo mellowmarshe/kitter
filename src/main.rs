@@ -52,9 +52,6 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                 (web::scope("/auth"))
                     .service(auth::login)
                     .service(auth::logout)
-                    /*
-                    Logout needs the Auth middleware but im lazy
-                     */
                     .service(auth::callback)
                     .wrap(middlewares::Auth),
             )
