@@ -17,6 +17,8 @@ pub struct NewPost {
     pub author: Option<String>,
     pub author_id: Option<i64>,
     pub content: Option<String>,
+    pub hearts: Option<i64>,
+    pub hearted_users: Option<Vec<i64>>,
 }
 #[derive(Serialize, Deserialize, FromRow, Clone, Debug)]
 pub struct Post {
@@ -24,15 +26,8 @@ pub struct Post {
     pub author: String,
     pub author_id: i64,
     pub content: String,
-    pub timestamp: DateTime<Utc>,
-}
-
-#[derive(Serialize, Deserialize, FromRow, Clone, Debug)]
-pub struct PostWithOwner {
-    pub id: i32,
-    pub author: String,
-    pub author_id: i64,
-    pub content: String,
+    pub hearts: i64,
+    pub hearted_users: Vec<i64>,
     pub timestamp: DateTime<Utc>,
 }
 

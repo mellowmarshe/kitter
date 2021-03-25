@@ -2,16 +2,24 @@
 
 Kitter is a twitter like website written with Rust. [Actix](https://actix.rs/) is the web framework we use. We use [GitHub OAuth2](https://docs.github.com/en/developers/apps/authorizing-oauth-apps) for logging in because I'm honestly lazy.
 
+A few concepts/words we use to describe parts of the application:
+
+- Hearts
+  - Hearts are what we call likes
+
 ### ✨ **API** ✨
 
 The base API route is `/api`
 
-The data should be valid JSON and valid JSON will be returned
+The data should be valid JSON and valid JSON will be returned. Some data such as current user are retrieved via the session. There is no alternative to this _yet_
 
 Format:
 
 ```
 [REQUEST] ROUTE
+
+DESCRIPTION
+
 ! PARAM  : TYPE : DESC
 ? RETURN : TYPE : DESC
 
@@ -28,12 +36,17 @@ These are prefixed with `/post`
 ```
 
 [POST] /add
-! content   : string  : the content of the post. this must be less than 512 characters.
-? id        : integer : the id of the post
-? author    : string  : the author of the post
-? author_id : integer : the id of the poster
-? content   : string  : the content of the post
-? timestamp : string  : the timestamp of when posted
+
+Adds a new post
+
+! content       : string   : the content of the post. this must be less than 512 characters.
+? id            : integer  : the id of the post
+? author        : string   : the author of the post
+? author_id     : integer  : the id of the poster
+? content       : string   : the content of the post
+? hearts        : integer  : the amount of hearts or "likes"
+? hearted_users : string[] : the users that hearted this post
+? timestamp     : string   : the timestamp of when posted
 
 curl --header "Content-Type: application/json" \
   --request POST \
@@ -41,21 +54,47 @@ curl --header "Content-Type: application/json" \
   http://localhost:8083/api/post/add
 
 [POST] /posts
+
+Gets all posts and optionally a limited or offset amount
+
 ! OPTIONAL
-! offset    : integer : how many rows should be skipped, used for paging
-! limit     : integer : how many rows should be returned
+! offset        : integer  : how many rows should be skipped, used for paging
+! limit         : integer  : how many rows should be returned
 ? LIST OF
-? id        : integer : the id of the post
-? author    : string  : the author of the post
-? author_id : integer : the id of the poster
-? content   : string  : the content of the post
-? timestamp : string  : the timestamp of when posted
+? id            : integer  : the id of the post
+? author        : string   : the author of the post
+? author_id     : integer  : the id of the poster
+? content       : string   : the content of the post
+? hearts        : integer  : the amount of hearts or "likes"
+? hearted_users : string[] : the users that hearted this post
+? timestamp     : string   : the timestamp of when posted
 
 curl --header "Content-Type: application/json" \
   --request GET \
   http://localhost:8083/api/post/posts
 
+[POST] /heart
+
+Toggles the heart status on a post for a user
+
+! id            : integer  : the id of the post to be hearted
+? id            : integer  : the id of the post
+? author        : string   : the author of the post
+? author_id     : integer  : the id of the poster
+? content       : string   : the content of the post
+? hearts        : integer  : the amount of hearts or "likes"
+? hearted_users : string[] : the users that hearted this post
+? timestamp     : string   : the timestamp of when posted
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"id": 4}' \
+  http://localhost:8083/api/post/heart
+
 [DELETE] /delete
+
+Deletes a post
+
 ! id      : integer  : the id of the post to be deleted
 ? id      : integer : the id of the post
 

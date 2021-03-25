@@ -70,15 +70,10 @@ function add_post(post, first) {
                         </div>
                         <nav class="level is-mobile">
                             <div class="level-left">
-                                <a class="level-item" aria-label="reply">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-reply is-black"></i><small>owo</small>
-                                    </span>
-                                </a>
-                                <a class="level-item" aria-label="like">
+                                <a class="level-item" id="heart-button" value="${json["id"]}" aria-label="heart">
                                     <span class="icon is-small">
                                         <i class="fa fa-heart is-black"></i>
-                                    </span>
+                                    </span> <small class="p-1" id="hearts-count-${json["id"]}">${json["hearts"]}</small>
                                 </a>
                             </div>
                             <div class="level-right">
@@ -251,6 +246,38 @@ $("body").on("click", "#error-close", function (e) {
   e.preventDefault();
 
   $(this).parent().remove();
+});
+
+$("body").on("click", "#heart-button", function (e) {
+  e.preventDefault();
+
+  var value = $(this).attr("value");
+
+  var json = `{"id": ${value}}`;
+
+  $.ajax({
+    url: "/api/post/heart",
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json",
+    processData: false,
+    data: json,
+    complete: function (xhr, text) {
+      const code = xhr.status;
+      if (code == 500) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
+      let json = JSON.parse(xhr.responseText);
+
+      $(`#hearts-count-${value}`).text(json["hearts"]);
+    },
+  });
 });
 
 $("body").on("click", "#dropdown-delete", function (e) {

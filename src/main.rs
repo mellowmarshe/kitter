@@ -45,6 +45,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                     .service(api::add)
                     .service(api::delete)
                     .service(api::posts)
+                    .service(api::heart)
                     .service(api::ping)
                     .wrap(middlewares::Auth),
             )

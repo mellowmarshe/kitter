@@ -28,6 +28,8 @@ async fn add(
     post.content = Some(utils::escape_html(post.content.clone().unwrap()));
     post.author = Some(user.login);
     post.author_id = Some(user.id);
+    post.hearts = Some(0);
+    post.hearted_users = Some(Vec::<i64>::new());
 
     let res = &data.db.add_post(&post).await;
 
@@ -80,6 +82,26 @@ async fn delete(
             return HttpResponse::InternalServerError().json(general::Error {
                 status_code: "500".to_string(),
                 error: "Error when removing to database, maybe that Id doesnt exist..".to_string(),
+            })
+        }
+        Ok(e) => HttpResponse::Ok().json(e),
+    }
+}
+
+#[post("/post/heart")]
+async fn heart(
+    data: web::Data<AppState>,
+    session: Session,
+    post: web::Json<post::IdOnlyPost>,
+) -> impl Responder {
+    let user = session.get::<User>("user").unwrap().expect("");
+    let res = &data.db.toggle_heart_post(&post, &user).await;
+
+    match res {
+        Err(_) => {
+            return HttpResponse::InternalServerError().json(general::Error {
+                status_code: "500".to_string(),
+                error: "Error when updating hearts...".to_string(),
             })
         }
         Ok(e) => HttpResponse::Ok().json(e),

@@ -38,18 +38,27 @@ impl ConnectionPool {
 
     pub async fn add_post(&self, post: &NewPost) -> Result<Post, sqlx::Error> {
         sqlx::query_as::<_, Post>(
-            r#"INSERT INTO posts("content", "author", "author_id") VALUES ($1, $2, $3) RETURNING *"#,
+            r#"INSERT INTO posts("content", "author", "author_id", "hearts", "hearted_users") VALUES ($1, $2, $3, $4, $5) RETURNING *"#,
         )
-        .bind(post.content.clone())
-        .bind(post.author.clone())
-        .bind(post.author_id)
-        .fetch_one(&self.pool)
-        .await
+            .bind(post.content.clone())
+            .bind(post.author.clone())
+            .bind(post.author_id)
+            .bind(post.hearts)
+            .bind(post.hearted_users.clone())
+            .fetch_one(&self.pool)
+            .await
     }
 
     pub async fn get_all_posts(&self) -> Result<Vec<Post>, sqlx::Error> {
         sqlx::query_as::<_, Post>("SELECT * FROM posts ORDER BY timestamp DESC")
             .fetch_all(&self.pool)
+            .await
+    }
+
+    pub async fn get_post_by_id(&self, post: &IdOnlyPost) -> Result<Post, sqlx::Error> {
+        sqlx::query_as::<_, Post>("SELECT * FROM posts WHERE id = $1")
+            .bind(post.id)
+            .fetch_one(&self.pool)
             .await
     }
 
@@ -80,6 +89,26 @@ impl ConnectionPool {
             .bind(user.login.clone())
             .bind(user.id)
             .execute(&self.pool)
+            .await
+    }
+
+    pub async fn toggle_heart_post(
+        &self,
+        post: &IdOnlyPost,
+        user: &User,
+    ) -> Result<Post, sqlx::Error> {
+        let p = self.get_post_by_id(&post).await?;
+
+        let mut query = "UPDATE posts SET hearts = hearts + 1, hearted_users = ARRAY_APPEND(hearted_users, $1) WHERE id = $2 RETURNING *";
+
+        if p.hearted_users.contains(&user.id) {
+            query = "UPDATE posts SET hearts = hearts - 1, hearted_users = ARRAY_REMOVE(hearted_users, $1) WHERE id = $2 RETURNING *";
+        }
+
+        sqlx::query_as::<_, Post>(query)
+            .bind(user.id)
+            .bind(post.id)
+            .fetch_one(&self.pool)
             .await
     }
 }

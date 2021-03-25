@@ -4,7 +4,7 @@ host = "127.0.0.1"
 # The port the server should run on
 port = "8083"
 # Routes that require a user session to use
-secured = ["/api/post/add", "/api/post/delete", "/api/post/posts", "/auth/logout"]
+secured = ["/api/post/add", "/api/post/delete", "/api/post/posts", "/api/post/heart","/auth/logout"]
 
 [database]
 # Postgres connection uri
