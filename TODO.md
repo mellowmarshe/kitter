@@ -13,7 +13,9 @@
 
 - [ ] Allow following users so you only see their tweets. Site staff tweets will always be seen no matter if following or not.
 
-- [ ] Add liking to posts...
+- [x] Add liking to posts...
+
+  - This has been done but we are calling them hearts on kitter.
 
 - [ ] Comments and nested comments... hopefully.
 
