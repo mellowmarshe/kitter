@@ -26,7 +26,9 @@
 
 - [ ] Hide Load button if theres not all posts there or no posts.
 
-- [ ] Add a "SYSTEM" message if no posts are found.
+- [x] Add a "SYSTEM" message if no posts are found.
+
+- [x] Dont show like button on SYSTEM message.
 
 - [ ] Mobile.. this is in QOL because I am honestly too lazy to prioritize it... sorry mobile users.
 

@@ -37,8 +37,18 @@ function isScrolledIntoView(elem) {
 function add_post(post, first) {
   var element = $("#posts");
   var json = post;
-  var time = new Date(`${json["timestamp"]}`).toLocaleString();
-
+  console.log(`${parseInt(json["author_id"])}`);
+  var time = new Date(json["timestamp"]).toLocaleString();
+  var hearts_html =
+    json["author_id"] || 0 != 0
+      ? `
+<a class="level-item" id="heart-button" value="${json["id"]}" aria-label="heart">
+    <span class="icon is-small">
+        <i class="fa fa-heart is-black"></i>
+    </span> <small class="p-1" id="hearts-count-${json["id"]}">${json["hearts"]}</small>
+</a>
+`
+      : "";
   var del_html =
     json["author_id"] == parseInt(user)
       ? `
@@ -70,11 +80,7 @@ function add_post(post, first) {
                         </div>
                         <nav class="level is-mobile">
                             <div class="level-left">
-                                <a class="level-item" id="heart-button" value="${json["id"]}" aria-label="heart">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-heart is-black"></i>
-                                    </span> <small class="p-1" id="hearts-count-${json["id"]}">${json["hearts"]}</small>
-                                </a>
+                                ${hearts_html}
                             </div>
                             <div class="level-right">
                                 <a class="level-item">
@@ -140,9 +146,26 @@ ${parsed["error"]}</div>
         return;
       }
 
+      let json = JSON.parse(xhr.responseText);
+
+      if (json.length == 0) {
+        add_post(
+          {
+            id: 0,
+            author: "SYSTEM",
+            content: "No posts found....",
+            hearts: 0,
+            hearted_users: [],
+            timestamp: Date.now(),
+          },
+          true
+        );
+        return;
+      }
+
       current_offset += limit;
 
-      $(JSON.parse(xhr.responseText)).each(function (index, element) {
+      $(json).each(function (index, element) {
         add_post(element, true);
       });
     },
@@ -268,7 +291,7 @@ $("body").on("click", "#heart-button", function (e) {
         let parsed = JSON.parse(xhr.responseText);
         $("#errors").append(`<div class="notification error">
 <button class="delete" id="error-close"></button>
-${parsed["error"]}</div>
+${parsed["error"]}.. that post may have been deleted.</div>
 `);
         return;
       }

@@ -39,14 +39,14 @@ These are prefixed with `/post`
 
 Adds a new post
 
-! content       : string   : the content of the post. this must be less than 512 characters.
-? id            : integer  : the id of the post
-? author        : string   : the author of the post
-? author_id     : integer  : the id of the poster
-? content       : string   : the content of the post
-? hearts        : integer  : the amount of hearts or "likes"
-? hearted_users : string[] : the users that hearted this post
-? timestamp     : string   : the timestamp of when posted
+! content       : string    : the content of the post. this must be less than 512 characters.
+? id            : integer   : the id of the post
+? author        : string    : the author of the post
+? author_id     : integer   : the id of the poster
+? content       : string    : the content of the post
+? hearts        : integer   : the amount of hearts or "likes"
+? hearted_users : integer[] : the users that hearted this post
+? timestamp     : string    : the timestamp of when posted
 
 curl --header "Content-Type: application/json" \
   --request POST \
@@ -58,16 +58,16 @@ curl --header "Content-Type: application/json" \
 Gets all posts and optionally a limited or offset amount
 
 ! OPTIONAL
-! offset        : integer  : how many rows should be skipped, used for paging
-! limit         : integer  : how many rows should be returned
+! offset        : integer   : how many rows should be skipped, used for paging
+! limit         : integer   : how many rows should be returned
 ? LIST OF
-? id            : integer  : the id of the post
-? author        : string   : the author of the post
-? author_id     : integer  : the id of the poster
-? content       : string   : the content of the post
-? hearts        : integer  : the amount of hearts or "likes"
-? hearted_users : string[] : the users that hearted this post
-? timestamp     : string   : the timestamp of when posted
+? id            : integer   : the id of the post
+? author        : string    : the author of the post
+? author_id     : integer   : the id of the poster
+? content       : string    : the content of the post
+? hearts        : integer   : the amount of hearts or "likes"
+? hearted_users : integer[] : the users that hearted this post
+? timestamp     : string    : the timestamp of when posted
 
 curl --header "Content-Type: application/json" \
   --request GET \
@@ -77,14 +77,14 @@ curl --header "Content-Type: application/json" \
 
 Toggles the heart status on a post for a user
 
-! id            : integer  : the id of the post to be hearted
-? id            : integer  : the id of the post
-? author        : string   : the author of the post
-? author_id     : integer  : the id of the poster
-? content       : string   : the content of the post
-? hearts        : integer  : the amount of hearts or "likes"
-? hearted_users : string[] : the users that hearted this post
-? timestamp     : string   : the timestamp of when posted
+! id            : integer   : the id of the post to be hearted
+? id            : integer   : the id of the post
+? author        : string    : the author of the post
+? author_id     : integer   : the id of the poster
+? content       : string    : the content of the post
+? hearts        : integer   : the amount of hearts or "likes"
+? hearted_users : integer[] : the users that hearted this post
+? timestamp     : string    : the timestamp of when posted
 
 curl --header "Content-Type: application/json" \
   --request POST \

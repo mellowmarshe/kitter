@@ -98,8 +98,7 @@ async fn heart(
     let res = &data.db.toggle_heart_post(&post, &user).await;
 
     match res {
-        Err(e) => {
-            println!("{:?}", e);
+        Err(_) => {
             return HttpResponse::InternalServerError().json(general::Error {
                 status_code: "500".to_string(),
                 error: "Error when updating hearts...".to_string(),
