@@ -5,7 +5,7 @@ use std::error;
 
 use crate::config;
 use crate::constants;
-use crate::models::github;
+use crate::models::{auth, github};
 use crate::AppState;
 
 #[get("/login")]
@@ -32,7 +32,7 @@ async fn logout(session: Session) -> impl Responder {
 #[get("/callback")]
 async fn callback(
     _: web::Data<AppState>,
-    callback: web::Query<github::Callback>,
+    callback: web::Query<auth::Callback>,
     session: Session,
 ) -> impl Responder {
     let res = authenticate(&constants::CONFIG, callback).await;
@@ -46,16 +46,25 @@ async fn callback(
         Ok(e) => {
             session.set("user", e).expect("Err in session");
 
+            let json = auth::Auth {
+                token: "test".to_string(),
+            };
+
+            /*
             return HttpResponse::TemporaryRedirect()
                 .header(header::LOCATION, "/")
                 .finish();
+
+                */
+
+            return HttpResponse::Ok().json(json);
         }
     }
 }
 
 async fn authenticate(
     config: &config::Config,
-    cb: web::Query<github::Callback>,
+    cb: web::Query<auth::Callback>,
 ) -> Result<github::User, Box<dyn error::Error>> {
     let mut headers = header::HeaderMap::new();
 
@@ -82,7 +91,7 @@ async fn authenticate(
         .post(&url)
         .send()
         .await?
-        .json::<github::AccessToken>()
+        .json::<auth::AccessToken>()
         .await?;
 
     let res = client
