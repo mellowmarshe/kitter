@@ -6,7 +6,11 @@ Vars
 
 const posts_per = 25;
 var current_offset = 0;
+var post_count = 0;
 
+// eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb21wYW55IjoiS2l0dGVyIiwiZXhwIjoxNjE3NTgyMTM5LCJpc3MiOiI1IiwidXNlciI6eyJpZCI6NSwiZW1haWwiOiJkb21pbmljQGRvbW0ubWUiLCJ1c2VybmFtZSI6ImRvbXRlcmlvbiIsInBhc3N3b3JkIjoiZUkqeTBLOVVCSVVqaldoKmpAZUlHZ0hMIiwidGltZXN0YW1wIjoiMjAyMS0wMy0yOFQxOTozNTo1NC43ODE1NjBaIn19.O8wcYNaqF_FhbNAduh_yL-YL2G0A2IgyWMhbzvo2uQQ
+
+var token = "";
 /*
 
 Utils
@@ -37,7 +41,6 @@ function isScrolledIntoView(elem) {
 function add_post(post, first) {
   var element = $("#posts");
   var json = post;
-  console.log(`${parseInt(json["author_id"])}`);
   var time = new Date(json["timestamp"]).toLocaleString();
   var hearts_html =
     json["author_id"] || 0 != 0
@@ -123,6 +126,8 @@ function add_post(post, first) {
     let dropdown = document.querySelector(`.dropdown-${json["id"]}`);
     dropdown.classList.toggle("is-active");
   });
+
+  post_count += 1;
 }
 
 function get_pages(offset, limit) {
@@ -132,12 +137,24 @@ function get_pages(offset, limit) {
     url: "/api/post/posts",
     type: "POST",
     dataType: "json",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     contentType: "application/json",
     processData: false,
     data: json,
     complete: function (xhr, text) {
       const code = xhr.status;
       if (code == 500) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
+      if (code == 401) {
         let parsed = JSON.parse(xhr.responseText);
         $("#errors").append(`<div class="notification error">
 <button class="delete" id="error-close"></button>
@@ -179,7 +196,9 @@ Ready
 */
 
 $(document).ready(function () {
-  get_pages(current_offset, posts_per);
+  if (token) {
+    get_pages(current_offset, posts_per);
+  }
 });
 
 /*
@@ -187,6 +206,104 @@ $(document).ready(function () {
 Submit events
 
 */
+
+$("#login-form").submit(function (e) {
+  e.preventDefault();
+
+  const json = serialize_form(this);
+  let j = JSON.parse(json);
+
+  $.ajax({
+    url: "/api/user/login",
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json",
+    processData: false,
+    data: json,
+    complete: function (xhr, text) {
+      const code = xhr.status;
+      if (code == 400) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
+      if (code == 401) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
+      if (code == 500) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
+      let parsed = JSON.parse(xhr.responseText);
+
+      console.log(parsed["token"]);
+    },
+  });
+});
+
+$("#register-form").submit(function (e) {
+  e.preventDefault();
+
+  const json = serialize_form(this);
+  let j = JSON.parse(json);
+
+  $.ajax({
+    url: "/api/user/register",
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json",
+    processData: false,
+    data: json,
+    complete: function (xhr, text) {
+      const code = xhr.status;
+      if (code == 400) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
+      if (code == 401) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
+      if (code == 500) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
+      let parsed = JSON.parse(xhr.responseText);
+
+      console.log(parsed);
+    },
+  });
+});
 
 $("#post-form").submit(function (e) {
   e.preventDefault();
@@ -209,6 +326,9 @@ Content may not be more than 512 characters or empty.</div>
     contentType: "application/json",
     processData: false,
     data: json,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     complete: function (xhr, text) {
       const code = xhr.status;
       if (code == 400) {
@@ -219,6 +339,16 @@ ${parsed["error"]}</div>
 `);
         return;
       }
+
+      if (code == 401) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#post-errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
       if (code == 500) {
         let parsed = JSON.parse(xhr.responseText);
         $("#post-errors").append(`<div class="notification error">
@@ -285,6 +415,9 @@ $("body").on("click", "#heart-button", function (e) {
     contentType: "application/json",
     processData: false,
     data: json,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     complete: function (xhr, text) {
       const code = xhr.status;
       if (code == 500) {
@@ -292,6 +425,15 @@ $("body").on("click", "#heart-button", function (e) {
         $("#errors").append(`<div class="notification error">
 <button class="delete" id="error-close"></button>
 ${parsed["error"]}.. that post may have been deleted.</div>
+`);
+        return;
+      }
+
+      if (code == 401) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
 `);
         return;
       }
@@ -315,9 +457,21 @@ $("body").on("click", "#dropdown-delete", function (e) {
     contentType: "application/json",
     processData: false,
     data: json,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     complete: function (xhr, text) {
       const code = xhr.status;
       if (code == 500) {
+        let parsed = JSON.parse(xhr.responseText);
+        $("#errors").append(`<div class="notification error">
+<button class="delete" id="error-close"></button>
+${parsed["error"]}</div>
+`);
+        return;
+      }
+
+      if (code == 401) {
         let parsed = JSON.parse(xhr.responseText);
         $("#errors").append(`<div class="notification error">
 <button class="delete" id="error-close"></button>

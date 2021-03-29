@@ -3,10 +3,9 @@ use actix_web::{get, web, HttpResponse, Responder};
 use reqwest::header;
 use std::error;
 
-use crate::config;
-use crate::constants;
 use crate::models::{auth, github};
 use crate::AppState;
+use crate::{config, constants};
 
 #[get("/login")]
 async fn login(_: web::Data<AppState>, _: Session) -> impl Responder {
@@ -44,20 +43,27 @@ async fn callback(
                 .finish();
         }
         Ok(e) => {
+            /*
+            let token = jwt_encode(&e);
+
+
+
+            match token {
+                Ok(t) => return HttpResponse::Ok().json(auth::AuthToken { token: t }),
+                Err(e) => {
+                    println!("{:?}", e);
+                    return HttpResponse::Ok().json(auth::AuthToken {
+                        token: "owo".to_string(),
+                    });
+                }
+            };
+            */
+
             session.set("user", e).expect("Err in session");
 
-            let json = auth::Auth {
-                token: "test".to_string(),
-            };
-
-            /*
             return HttpResponse::TemporaryRedirect()
                 .header(header::LOCATION, "/")
                 .finish();
-
-                */
-
-            return HttpResponse::Ok().json(json);
         }
     }
 }

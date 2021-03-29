@@ -1,6 +1,6 @@
 ## **Kitter**
 
-Kitter is a twitter like website written with Rust. [Actix](https://actix.rs/) is the web framework we use. We use [GitHub OAuth2](https://docs.github.com/en/developers/apps/authorizing-oauth-apps) for logging in because I'm honestly lazy.
+Kitter is a twitter like website written with Rust. [Actix](https://actix.rs/) is the web framework we use.
 
 A few concepts/words we use to describe parts of the application:
 
@@ -11,7 +11,7 @@ A few concepts/words we use to describe parts of the application:
 
 The base API route is `/api`
 
-The data should be valid JSON and valid JSON will be returned. Some data such as current user are retrieved via the session. There is no alternative to this _yet_
+The data should be valid JSON and valid JSON will be returned.
 
 Format:
 
@@ -70,7 +70,7 @@ Gets all posts and optionally a limited or offset amount
 ? timestamp     : string    : the timestamp of when posted
 
 curl --header "Content-Type: application/json" \
-  --request GET \
+  --request POST \
   http://localhost:8083/api/post/posts
 
 [POST] /heart
@@ -88,7 +88,7 @@ Toggles the heart status on a post for a user
 
 curl --header "Content-Type: application/json" \
   --request POST \
-  --data '{"id": 4}' \
+  --data '{"id": 1}' \
   http://localhost:8083/api/post/heart
 
 [DELETE] /delete
@@ -100,7 +100,7 @@ Deletes a post
 
 curl --header "Content-Type: application/json" \
   --request DELETE \
-  --data '{"id": 4}' \
+  --data '{"id": 1}' \
   http://localhost:8083/api/post/delete
 
 ```

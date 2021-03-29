@@ -1,8 +1,7 @@
-use actix_session::Session;
 use actix_web::{get, HttpResponse, Responder};
 
-use crate::models::{general, github::User};
 use crate::AppState;
+use crate::{middlewares::Authorization, models::general};
 use actix_web::web;
 
 use tera::{Context, Tera};
@@ -22,21 +21,18 @@ lazy_static! {
 }
 
 #[get("/")]
-async fn index(data: web::Data<AppState>, session: Session) -> impl Responder {
+async fn index(authorization: Option<Authorization>, data: web::Data<AppState>) -> impl Responder {
     let mut context = Context::new();
-
-    let user = session.get::<User>("user");
 
     let mut template = "notloggedin.html";
 
-    if let Ok(_u) = user {
-        if let Some(u) = _u {
-            context.insert("user", &u.clone());
+    if let Some(u) = authorization {
+        let user = u.user;
+        context.insert("user", &user.clone());
 
-            let _ = &data.db.update_changed_usernames(&u).await;
+        let _ = &data.db.update_changed_usernames(&user).await;
 
-            template = "index.html";
-        }
+        template = "index.html";
     }
 
     match TEMPLATES.render(template, &context) {

@@ -1,8 +1,11 @@
-use crate::models::{general, github::User, post};
 use crate::utils;
 use crate::AppState;
-use actix_session::Session;
+use crate::{
+    middlewares::Authorization,
+    models::{general, post},
+};
 use actix_web::{delete, get, post, web, HttpResponse, Responder};
+use utils::util;
 
 #[get("/ping")]
 async fn ping() -> impl Responder {
@@ -11,8 +14,8 @@ async fn ping() -> impl Responder {
 
 #[post("/post/add")]
 async fn add(
+    authorization: Authorization,
     data: web::Data<AppState>,
-    session: Session,
     mut post: web::Json<post::NewPost>,
 ) -> impl Responder {
     if !post::verify(post.content.clone()) {
@@ -23,10 +26,10 @@ async fn add(
         });
     }
 
-    let user = session.get::<User>("user").unwrap().expect("");
+    let user = authorization.user;
 
-    post.content = Some(utils::escape_html(post.content.clone().unwrap()));
-    post.author = Some(user.login);
+    post.content = Some(util::escape_html(post.content.clone().unwrap()));
+    post.author = Some(user.username);
     post.author_id = Some(user.id);
     post.hearts = Some(0);
     post.hearted_users = Some(Vec::<i64>::new());
@@ -46,6 +49,7 @@ async fn add(
 
 #[post("/post/posts")]
 async fn posts(
+    authorization: Authorization,
     data: web::Data<AppState>,
     paged: Option<web::Json<post::PagedPosts>>,
 ) -> impl Responder {
@@ -70,11 +74,11 @@ async fn posts(
 
 #[delete("/post/delete")]
 async fn delete(
+    authorization: Authorization,
     data: web::Data<AppState>,
-    session: Session,
     post: web::Json<post::IdOnlyPost>,
 ) -> impl Responder {
-    let user = session.get::<User>("user").unwrap().expect("");
+    let user = authorization.user;
     let res = &data.db.delete_post(&post, &user).await;
 
     match res {
@@ -90,11 +94,11 @@ async fn delete(
 
 #[post("/post/heart")]
 async fn heart(
+    authorization: Authorization,
     data: web::Data<AppState>,
-    session: Session,
     post: web::Json<post::IdOnlyPost>,
 ) -> impl Responder {
-    let user = session.get::<User>("user").unwrap().expect("");
+    let user = authorization.user;
     let res = &data.db.toggle_heart_post(&post, &user).await;
 
     match res {

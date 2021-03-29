@@ -1,11 +1,16 @@
-use crate::constants;
-use crate::models::github::User;
+use crate::models::{general, user::User};
+use crate::{constants, utils::jwt};
 use actix_service::{Service, Transform};
-use actix_session::UserSession;
-use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error, HttpResponse};
+use actix_web::{
+    dev::ServiceRequest,
+    dev::{self, ServiceResponse},
+    error::ErrorUnauthorized,
+    Error, FromRequest, HttpRequest, HttpResponse,
+};
 use futures::future::{ok, Ready};
 use futures::Future;
-use reqwest::header;
+use futures_util::future::err;
+use serde::Deserialize;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
@@ -61,26 +66,67 @@ where
             .secured
             .contains(&req.path().to_string())
         {
-            let session = req.get_session();
+            if let Some(i) = req.headers().get("Authorization") {
+                let i = i.to_str().unwrap();
+                if i.to_lowercase().starts_with("bearer") {
+                    let token = i[6..i.len()].trim();
 
-            let user = session.get::<User>("user").expect("");
-            if user.is_none() {
-                return Box::pin(async move {
-                    // this is why request seems blank
-                    Ok(req.into_response(
-                        HttpResponse::TemporaryRedirect()
-                            .header(header::LOCATION, "/")
-                            .finish()
-                            .into_body(),
-                    ))
-                });
+                    match jwt::decode(token.to_string()) {
+                        Ok(c) => {
+                            println!("good: {:?}", c);
+                        }
+                        Err(_) => {
+                            return Box::pin(async move {
+                                Ok(req.into_response(
+                            HttpResponse::Unauthorized()
+                                .json(general::Error {
+                                    status_code: "401".to_string(),
+                                    error: "Unauthorized. Please set the Authorization header with Bearer token.".to_string(),
+                                }).into_body(),))
+                            });
+                        }
+                    }
+                }
             }
         }
 
         let fut = self.service.call(req);
         Box::pin(async move {
             let res = fut.await?;
+
             Ok(res)
         })
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Authorization {
+    pub user: User,
+}
+
+impl FromRequest for Authorization {
+    type Error = Error;
+    type Future = Ready<Result<Self, Self::Error>>;
+    type Config = ();
+
+    fn from_request(req: &HttpRequest, payload: &mut dev::Payload) -> Self::Future {
+        if let Some(i) = req.headers().get("Authorization") {
+            let i = i.to_str().unwrap();
+            if i.to_lowercase().starts_with("bearer") {
+                let token = i[6..i.len()].trim();
+
+                match jwt::decode(token.to_string()) {
+                    Ok(c) => return ok(Authorization { user: c.user }),
+                    Err(_) => {
+                        return err(ErrorUnauthorized(
+                            r#"{"status_code": "401", "error": "Unauthorized. Please set the Authorization header with Bearer token."}"#,
+                        ))
+                    }
+                }
+            }
+        }
+        return err(ErrorUnauthorized(
+            r#"{"status_code": "401", "error": "Unauthorized. Please set the Authorization header with Bearer token."}"#,
+        ));
     }
 }

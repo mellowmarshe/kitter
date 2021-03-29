@@ -42,19 +42,19 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             ))
             .service(
                 (web::scope("/api"))
-                    .service(api::add)
-                    .service(api::delete)
-                    .service(api::posts)
-                    .service(api::heart)
-                    .service(api::ping)
-                    .wrap(middlewares::Auth),
+                    .service(api::posts::add)
+                    .service(api::posts::delete)
+                    .service(api::posts::posts)
+                    .service(api::posts::heart)
+                    .service(api::posts::ping)
+                    .service(api::users::register)
+                    .service(api::users::login),
             )
             .service(
                 (web::scope("/auth"))
                     .service(auth::login)
                     .service(auth::logout)
-                    .service(auth::callback)
-                    .wrap(middlewares::Auth),
+                    .service(auth::callback),
             )
             .service(index::index)
             .service(Files::new("/styles", "static/styles").show_files_listing())

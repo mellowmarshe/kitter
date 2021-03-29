@@ -20,6 +20,8 @@
 
 - [ ] Comments and nested comments... hopefully.
 
+- [ ] Use tokens in an authorization header for API stuff so we dont rely on session..
+
 - [ ] Eventually a UI overhaul... most likely with React or Vue.
 
 ## Quality of Life
@@ -37,4 +39,7 @@
 ## Bugs
 
 - [x] A bug with hearts where spam clicking would either subtract or add one to the total count.
+
   - Fix was to loosely base count off the hearted_users array
+
+- [ ] Clicking LOAD when theres no posts causes SYSTEM message to repost

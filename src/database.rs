@@ -1,8 +1,8 @@
 use crate::{
     constants,
     models::{
-        github::User,
         post::{IdOnlyPost, NewPost, PagedPosts, Post},
+        user::{self, Register, User, UserPassword},
     },
 };
 
@@ -86,7 +86,7 @@ impl ConnectionPool {
 
     pub async fn update_changed_usernames(&self, user: &User) -> Result<PgDone, sqlx::Error> {
         sqlx::query("UPDATE posts SET author = $1 WHERE author_id = $2 AND author != $1")
-            .bind(user.login.clone())
+            .bind(user.username.clone())
             .bind(user.id)
             .execute(&self.pool)
             .await
@@ -110,6 +110,24 @@ impl ConnectionPool {
         sqlx::query_as::<_, Post>(query)
             .bind(user.id)
             .bind(post.id)
+            .fetch_one(&self.pool)
+            .await
+    }
+
+    pub async fn add_user(&self, user: &Register) -> Result<user::User, sqlx::Error> {
+        sqlx::query_as::<_, user::User>(
+            r#"INSERT INTO users("email", "username", "password") VALUES ($1, $2, $3) RETURNING *"#,
+        )
+        .bind(user.email.clone())
+        .bind(user.username.clone())
+        .bind(user.password.clone())
+        .fetch_one(&self.pool)
+        .await
+    }
+
+    pub async fn get_user_by_name(&self, user: &UserPassword) -> Result<user::User, sqlx::Error> {
+        sqlx::query_as::<_, user::User>("SELECT * FROM users WHERE username = $1")
+            .bind(user.username.clone())
             .fetch_one(&self.pool)
             .await
     }

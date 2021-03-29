@@ -13,6 +13,7 @@ pub struct ServerConfig {
     pub host: String,
     pub port: String,
     pub secured: Vec<String>,
+    pub secret: String,
 }
 
 #[derive(Debug, Deserialize, Clone)]
