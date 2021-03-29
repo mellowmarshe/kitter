@@ -27,7 +27,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     db.migrations().await?;
 
     HttpServer::new(move || {
-        let _cors = Cors::default()
+        let cors = Cors::default()
             .allow_any_header()
             .allow_any_method()
             .allow_any_origin()
@@ -40,6 +40,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                 &constants::CONFIG.database.redis,
                 &[0; 32],
             ))
+            .wrap(cors)
             .service(
                 (web::scope("/api"))
                     .service(api::posts::add)
