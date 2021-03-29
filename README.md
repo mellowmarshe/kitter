@@ -2,6 +2,11 @@
 
 Kitter is a twitter like website written with Rust. [Actix](https://actix.rs/) is the web framework we use.
 
+| Service              |    Description     |
+| :------------------- | :----------------: |
+| [backend](backend)   |  The Rust backend  |
+| [frontend](frontend) | The React frontend |
+
 A few concepts/words we use to describe parts of the application:
 
 - Hearts
@@ -12,6 +17,8 @@ A few concepts/words we use to describe parts of the application:
 The base API route is `/api`
 
 The data should be valid JSON and valid JSON will be returned.
+
+The api is secured with the Authorization header. You will need a token to use the API.
 
 Format:
 
@@ -49,6 +56,7 @@ Adds a new post
 ? timestamp     : string    : the timestamp of when posted
 
 curl --header "Content-Type: application/json" \
+  --header "Authorization: Bearer TOKEN" \
   --request POST \
   --data '{"content": "owo"}' \
   http://localhost:8083/api/post/add
@@ -70,6 +78,7 @@ Gets all posts and optionally a limited or offset amount
 ? timestamp     : string    : the timestamp of when posted
 
 curl --header "Content-Type: application/json" \
+  --header "Authorization: Bearer TOKEN"
   --request POST \
   http://localhost:8083/api/post/posts
 
@@ -87,6 +96,7 @@ Toggles the heart status on a post for a user
 ? timestamp     : string    : the timestamp of when posted
 
 curl --header "Content-Type: application/json" \
+  --header "Authorization: Bearer TOKEN"
   --request POST \
   --data '{"id": 1}' \
   http://localhost:8083/api/post/heart
@@ -99,10 +109,62 @@ Deletes a post
 ? id      : integer : the id of the post
 
 curl --header "Content-Type: application/json" \
+  --header "Authorization: Bearer TOKEN"
   --request DELETE \
   --data '{"id": 1}' \
   http://localhost:8083/api/post/delete
 
+```
+
+**Routes for users**
+
+The routes used to manage users
+
+These are prefixed with `/user`
+
+```
+Requirements:
+
+Usernames must be between 3 and 32 characters. They can contain 1-9, a-Z, . and \_. They must start with a-Z.
+
+Password must be atleast 8 characters with an uppercase, lowercase and number. Special characters are allowed.
+
+Emails must be a valid email.
+```
+
+```
+
+[POST] /register
+
+Register a new user
+
+! username  : string  : the username of the user, must meet requirements listed above
+! email     : string  : the email of the user
+! password  : string  : the password of the user, must meet requirements listed above
+? id        : integer : the id of the user
+? username  : string  : the username of the user
+? email     : string  : the email of the user
+? password  : string  : the password of the user
+? timestamp : string  : the timestamp of creation
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"username": "domterion", "email": "dominic@domm.me", "password": "eI*y0K9UBIUjjWh*j@eIGgHL"}' \
+  http://localhost:8083/api/user/register
+
+[POST] /login
+
+Log a user in
+
+! username  : string  : the username of the user
+! password  : string  : the password of the user
+? token     : string  : the JWT, this is used in authentication for the api
+? type      : string  : the type of the token, usually bearer
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"username": "domterion", "password": "eI*y0K9UBIUjjWh*j@eIGgHL"}' \
+  http://localhost:8083/api/user/login
 ```
 
 ### ✨ **Information** ✨
