@@ -5,7 +5,7 @@ Kitter is a twitter like website written with Rust. [Actix](https://actix.rs/) i
 | Service              |    Description     |
 | :------------------- | :----------------: |
 | [backend](backend)   |  The Rust backend  |
-| [frontend](frontend) | The React frontend |
+| [frontend](frontend) | The Vue frontend |
 
 A few concepts/words we use to describe parts of the application:
 
