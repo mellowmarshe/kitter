@@ -20,8 +20,46 @@ const actions = {
         },
       }
     );
-    console.log(res.data);
     commit("setPosts", res.data);
+  },
+  async addPost({ commit, rootState }, post) {
+    const res = await axios.post(
+      "http://localhost:8083/api/post/add",
+      JSON.stringify(post),
+      {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${rootState.token}`,
+        },
+      }
+    );
+
+    commit("newPost", res.data);
+  },
+  async deletePost({ commit, rootState }, id) {
+    const res = await axios.delete("http://localhost:8083/api/post/delete", {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${rootState.token}`,
+      },
+      data: JSON.stringify({ id: id }),
+    });
+
+    commit("removePost", res.data.id);
+  },
+  async toggleHeart({ commit, rootState }, id) {
+    const res = await axios.post(
+      "http://localhost:8083/api/post/heart",
+      JSON.stringify({ id: id }),
+      {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${rootState.token}`,
+        },
+      }
+    );
+
+    commit("updatePost", res.data);
   },
 };
 
@@ -30,6 +68,12 @@ const mutations = {
   newPost: (state, posts) => state.posts.unshift(posts),
   removePost: (state, id) =>
     (state.posts = state.posts.filter((posts) => posts.id !== id)),
+  updatePost: (state, post) => {
+    const index = state.posts.findIndex((p) => p.id === post.id);
+    if (index !== -1) {
+      state.posts.splice(index, 1, post);
+    }
+  },
 };
 
 export default {
