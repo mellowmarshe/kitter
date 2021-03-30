@@ -32,11 +32,13 @@ pub struct Post {
 }
 
 pub fn verify(content: Option<String>) -> bool {
-    if content.is_none() {
-        return false;
-    }
-    if content.unwrap().len() > 512 {
-        return false;
+    if let Some(c) = content {
+        if c.clone().replace(" ", "").is_empty() {
+            return false;
+        }
+        if c.len() > 512 {
+            return false;
+        }
     }
 
     true
