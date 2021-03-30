@@ -33,9 +33,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const token = store.state.token;
-  if (to.matched.some((record) => record.meta.secured) && !token) next("login");
-  else next();
+  const token = store.state.auth.token;
+  if (to.matched.some((record) => record.meta.secured) && !token) {
+    next("login");
+  } else {
+    next();
+  }
 });
 
 export default router;

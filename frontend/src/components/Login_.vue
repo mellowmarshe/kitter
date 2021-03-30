@@ -30,12 +30,13 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from "vuex";
 
 export default {
   name: "Login_",
   components: {},
   methods: {
+    ...mapActions(["fetchToken"]),
     async onSubmit(e) {
       e.preventDefault();
 
@@ -44,21 +45,11 @@ export default {
         password: this.password,
       };
 
-      const res = await axios.post(
-        "http://localhost:8083/api/user/login",
-        JSON.stringify(login),
-        {
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
-      );
-      const data = res.data;
-      this.$store.state.token = data["token"];
-      this.$store.state.username = login.username;
-      this.$store.state.id = login.id;
+      this.fetchToken(login).then(() => {
+        console.log(this.$store.state);
 
-      this.$router.push("/");
+        this.$router.push("/");
+      });
     },
   },
 };

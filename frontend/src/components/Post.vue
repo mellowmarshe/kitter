@@ -21,13 +21,25 @@
               aria-label="heart"
             >
               <span class="icon is-small">
-                <i class="fa fa-heart"></i>
+                <i
+                  :class="[
+                    post.hearted_users.includes(this.$store.state.user.id)
+                      ? 'has-text-danger'
+                      : '',
+                    'has-text-black',
+                  ]"
+                  class="fa fa-heart"
+                ></i>
               </span>
               <small class="p-1"> {{ post.hearts }}</small>
             </a>
           </div>
           <div class="level-right">
-            <a @click="deletePost(post.id)" class="level-item">
+            <a
+              v-if="post.author_id == this.$store.state.user.id"
+              @click="deletePost(post.id)"
+              class="level-item"
+            >
               <a href="#" class="dropdown-item">
                 <i class="fa fa-times" aria-hidden="true"></i>
               </a>

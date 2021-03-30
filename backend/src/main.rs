@@ -49,7 +49,8 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                     .service(api::posts::heart)
                     .service(api::posts::ping)
                     .service(api::users::register)
-                    .service(api::users::login),
+                    .service(api::users::login)
+                    .service(api::users::me),
             )
             .service(
                 (web::scope("/auth"))

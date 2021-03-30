@@ -1,7 +1,7 @@
-use crate::models::{auth, general, user};
+use crate::{middlewares::Authorization, models::{auth, general, user::{self, UserPassword}}};
 use crate::utils;
 use crate::AppState;
-use actix_web::{post, web, HttpResponse, Responder};
+use actix_web::{get, post, web, HttpResponse, Responder};
 use utils::jwt;
 
 #[post("/user/register")]
@@ -87,6 +87,28 @@ async fn login(data: web::Data<AppState>, user: web::Json<user::UserPassword>) -
                     });
                 }
             }
+            HttpResponse::Ok().json(u)
+        }
+    }
+}
+
+#[get("/user/me")]
+async fn me(authorization: Authorization, data: web::Data<AppState>) -> impl Responder {
+    let u = UserPassword { username: authorization.user.username, password: "".to_string() };
+    let res = &data.db.get_user_by_name(&u).await;
+
+    match res {
+        Err(e) => {
+            println!("{}", e);
+            return HttpResponse::InternalServerError().json(general::Error {
+                status_code: "500".to_string(),
+                error: "Error getting user.".to_string(),
+            });
+        }
+
+        Ok(e) => {
+            let mut u = e.clone();
+            u.password = "".to_string();
             HttpResponse::Ok().json(u)
         }
     }

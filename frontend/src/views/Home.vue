@@ -6,8 +6,8 @@
       </div>
       <div class="column ml-4 pl-0">
         <div>
-          <button class="button is-black" href="/auth/logout">
-            <strong>{{ this.$store.state.username }}</strong>
+          <button class="button is-black">
+            <strong>{{ this.$store.state.user.username }}</strong>
           </button>
           <NewPostModal />
         </div>
@@ -30,11 +30,19 @@
 import Posts from "../components/Posts.vue";
 import NewPostModal from "../components/NewPostModal.vue";
 
+import { mapActions } from "vuex";
+
 export default {
   name: "Home",
   components: {
     Posts,
     NewPostModal,
+  },
+  methods: {
+    ...mapActions(["fetchUser"]),
+  },
+  created() {
+    this.fetchUser();
   },
 };
 </script>

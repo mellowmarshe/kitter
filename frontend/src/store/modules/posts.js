@@ -16,7 +16,7 @@ const actions = {
       {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${rootState.token}`,
+          Authorization: `Bearer ${rootState.auth.token}`,
         },
       }
     );
@@ -29,7 +29,7 @@ const actions = {
       {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${rootState.token}`,
+          Authorization: `Bearer ${rootState.auth.token}`,
         },
       }
     );
@@ -40,7 +40,7 @@ const actions = {
     const res = await axios.delete("http://localhost:8083/api/post/delete", {
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${rootState.token}`,
+        Authorization: `Bearer ${rootState.auth.token}`,
       },
       data: JSON.stringify({ id: id }),
     });
@@ -54,7 +54,7 @@ const actions = {
       {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${rootState.token}`,
+          Authorization: `Bearer ${rootState.auth.token}`,
         },
       }
     );

@@ -2,9 +2,9 @@
 
 Kitter is a twitter like website written with Rust. [Actix](https://actix.rs/) is the web framework we use.
 
-| Service              |    Description     |
-| :------------------- | :----------------: |
-| [backend](backend)   |  The Rust backend  |
+| Service              |   Description    |
+| :------------------- | :--------------: |
+| [backend](backend)   | The Rust backend |
 | [frontend](frontend) | The Vue frontend |
 
 A few concepts/words we use to describe parts of the application:
@@ -165,6 +165,21 @@ curl --header "Content-Type: application/json" \
   --request POST \
   --data '{"username": "domterion", "password": "eI*y0K9UBIUjjWh*j@eIGgHL"}' \
   http://localhost:8083/api/user/login
+
+[GET] /me
+
+Get information about the user
+
+? id        : integer : the id of the user
+? username  : string  : the username of the user
+? email     : string  : the email of the user
+? password  : string  : the password of the user. this will be blank and yes its on purpose.
+? timestamp : string  : the timestamp of creation
+
+curl --header "Content-Type: application/json" \
+  --header "Authorization: Bearer TOKEN"
+  --request GET \
+  http://localhost:8083/api/user/me
 ```
 
 ### ✨ **Information** ✨
