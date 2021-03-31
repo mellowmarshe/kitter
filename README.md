@@ -25,9 +25,14 @@ $ git clone https://github.com/Domterion/kitter.git
 # Go into the kitter directory
 $ cd kitter
 
-# Run the docker container, this will download, build and start all services
-$ docker-compose up 
+# Make the config and modify the keys
+$ cp ./backend/config.toml.example ./backend/config.toml
 
+# We need a prod_config.toml for deployment. Change the keys in here if need be
+$ cp ./backend/config.toml ./backend/prod_config.toml
+
+# Run the docker container, this will download, build and start all services
+$ docker-compose up
 ```
 
 You should now be able to visit `http://localhost/` and see Kitter!

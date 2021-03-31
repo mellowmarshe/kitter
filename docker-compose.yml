@@ -2,7 +2,7 @@ version: "3"
 services:
   backend:
     build:
-        context: "./backend"
+      context: "./backend"
     restart: always
     tty: true
     environment:
@@ -13,7 +13,7 @@ services:
       - app-network
   frontend:
     build:
-        context: "./frontend"
+      context: "./frontend"
     restart: always
     tty: true
     ports:
@@ -30,6 +30,8 @@ services:
       POSTGRES_PASSWORD: kitter
     networks:
       - app-network
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
   nginx:
     image: nginx:alpine
     restart: always
@@ -47,3 +49,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres-volume:

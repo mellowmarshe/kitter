@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate lazy_static;
-
 mod config;
 mod constants;
 mod database;
@@ -10,10 +7,8 @@ mod routes;
 mod utils;
 
 use actix_cors::Cors;
-use actix_files::Files;
-use actix_redis::RedisSession;
 use actix_web::{web, App, HttpServer};
-use routes::{api, auth, index};
+use routes::api;
 use std::error::Error;
 
 pub struct AppState {

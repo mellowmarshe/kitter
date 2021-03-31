@@ -5,29 +5,18 @@ use std::{fs, path::PathBuf};
 pub struct Config {
     pub server: ServerConfig,
     pub database: DatabaseConfig,
-    pub github: GithubConfig,
 }
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct ServerConfig {
     pub host: String,
     pub port: String,
-    pub secured: Vec<String>,
     pub secret: String,
 }
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct DatabaseConfig {
     pub postgres: String,
-    pub redis: String,
-}
-
-#[derive(Debug, Deserialize, Clone)]
-pub struct GithubConfig {
-    pub client_id: String,
-    pub client_secret: String,
-    pub state: String,
-    pub redirect: String,
 }
 
 impl Config {

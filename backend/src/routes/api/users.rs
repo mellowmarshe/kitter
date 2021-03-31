@@ -1,6 +1,12 @@
-use crate::{middlewares::Authorization, models::{auth, general, user::{self, UserPassword}}};
 use crate::utils;
 use crate::AppState;
+use crate::{
+    middlewares::Authorization,
+    models::{
+        auth, general,
+        user::{self, UserPassword},
+    },
+};
 use actix_web::{get, post, web, HttpResponse, Responder};
 use utils::jwt;
 
@@ -18,7 +24,7 @@ async fn register(
 
     let hashed = bcrypt::hash(user.password.clone(), 10);
 
-    if let Err(_) = hashed {
+    if hashed.is_err() {
         return HttpResponse::InternalServerError().json(general::Error {
             status_code: "500".to_string(),
             error: "Error with hashing, please try again.".to_string(),
@@ -62,7 +68,7 @@ async fn login(data: web::Data<AppState>, user: web::Json<user::UserPassword>) -
             u.password = user.password.clone();
             match bcrypt::verify(user.password.clone(), &e.password) {
                 Ok(res) => {
-                    if res == true {
+                    if res {
                         match jwt::encode(&u) {
                             Ok(t) => {
                                 return HttpResponse::Ok().json(auth::AuthToken {
@@ -94,7 +100,10 @@ async fn login(data: web::Data<AppState>, user: web::Json<user::UserPassword>) -
 
 #[get("/user/me")]
 async fn me(authorization: Authorization, data: web::Data<AppState>) -> impl Responder {
-    let u = UserPassword { username: authorization.user.username, password: "".to_string() };
+    let u = UserPassword {
+        username: authorization.user.username,
+        password: "".to_string(),
+    };
     let res = &data.db.get_user_by_name(&u).await;
 
     match res {

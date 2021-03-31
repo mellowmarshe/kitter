@@ -1,25 +1,11 @@
 [server]
 # The servers host, either 127.0.0.1 or 0.0.0.0
-host = "127.0.0.1"
+host = "0.0.0.0"
 # The port the server should run on
 port = "8083"
-# Routes that require a user session to use
-secured = ["/api/post/add", "/api/post/delete", "/api/post/posts", "/api/post/heart","/auth/logout"]
 # Secret
 secret = ""
 
 [database]
 # Postgres connection uri
-postgres = "postgres://postgres:postgres@localhost:5432/postgres"
-# Redis connection uri
-redis = "localhost:6379"
-
-[github]
-# Client ID for your github OAuth2 app
-client_id = ""
-# Client secret for your github OAuth2 app
-client_secret = ""
-# State used to prevent cross attacks
-state = ""
-# Redirect url
-redirect = "UNIMPLEMENTED"
+postgres = "postgres://kitter:kitter@localhost:5432/kitter"

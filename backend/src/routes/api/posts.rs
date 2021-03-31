@@ -9,7 +9,7 @@ use utils::util;
 
 #[get("/ping")]
 async fn ping() -> impl Responder {
-    HttpResponse::Ok().body("pong")
+    HttpResponse::Ok().body("pong ping!")
 }
 
 #[post("/post/add")]
@@ -49,7 +49,7 @@ async fn add(
 
 #[post("/post/posts")]
 async fn posts(
-    authorization: Authorization,
+    _: Authorization,
     data: web::Data<AppState>,
     paged: Option<web::Json<post::PagedPosts>>,
 ) -> impl Responder {

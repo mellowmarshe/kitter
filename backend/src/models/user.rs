@@ -41,5 +41,5 @@ pub fn verify(user: Register) -> bool {
         return false;
     }
 
-    return true;
+    true
 }

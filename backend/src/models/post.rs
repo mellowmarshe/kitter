@@ -33,7 +33,7 @@ pub struct Post {
 
 pub fn verify(content: Option<String>) -> bool {
     if let Some(c) = content {
-        if c.clone().replace(" ", "").is_empty() {
+        if c.replace(" ", "").is_empty() {
             return false;
         }
         if c.len() > 512 {
