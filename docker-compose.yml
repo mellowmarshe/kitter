@@ -1,0 +1,49 @@
+version: "3"
+services:
+  backend:
+    build:
+        context: "./backend"
+    restart: always
+    tty: true
+    environment:
+      - PROD=true
+    ports:
+      - "8083:8083"
+    networks:
+      - app-network
+  frontend:
+    build:
+        context: "./frontend"
+    restart: always
+    tty: true
+    ports:
+      - "8084:8084"
+    networks:
+      - app-network
+  postgres:
+    image: postgres:alpine
+    restart: always
+    tty: true
+    environment:
+      POSTGRES_USER: kitter
+      POSTGRES_DB: kitter
+      POSTGRES_PASSWORD: kitter
+    networks:
+      - app-network
+  nginx:
+    image: nginx:alpine
+    restart: always
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    volumes:
+      - ./web/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

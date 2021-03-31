@@ -12,6 +12,26 @@ A few concepts/words we use to describe parts of the application:
 - Hearts
   - Hearts are what we call likes
 
+### ✨ **Usage** ✨
+
+Kitter uses [Docker](https://www.docker.com/) to deploy. This makes Kitter easier to deploy as it's one command for all services.
+
+Make sure you have [Git](https://git-scm.com/), [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
+
+```
+# Clone the Kitter repo
+$ git clone https://github.com/Domterion/kitter.git
+
+# Go into the kitter directory
+$ cd kitter
+
+# Run the docker container, this will download, build and start all services
+$ docker-compose up 
+
+```
+
+You should now be able to visit `http://localhost/` and see Kitter!
+
 ### ✨ **API** ✨
 
 The base API route is `/api`

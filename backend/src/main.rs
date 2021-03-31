@@ -36,10 +36,6 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
         App::new()
             .data(AppState { db: db.clone() })
-            .wrap(RedisSession::new(
-                &constants::CONFIG.database.redis,
-                &[0; 32],
-            ))
             .wrap(cors)
             .service(
                 (web::scope("/api"))
@@ -52,15 +48,6 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
                     .service(api::users::login)
                     .service(api::users::me),
             )
-            .service(
-                (web::scope("/auth"))
-                    .service(auth::login)
-                    .service(auth::logout)
-                    .service(auth::callback),
-            )
-            .service(index::index)
-            .service(Files::new("/styles", "static/styles").show_files_listing())
-            .service(Files::new("/js", "static/js").show_files_listing())
     })
     .bind(format!(
         "{}:{}",
