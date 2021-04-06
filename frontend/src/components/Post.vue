@@ -15,33 +15,33 @@
         <nav class="level is-mobile">
           <div class="level-left">
             <a
-              @click="toggleHeart(post.id)"
-              class="level-item"
               id="heart-button"
+              class="level-item"
               aria-label="heart"
+              @click="toggleHeart(post.id)"
             >
               <span class="icon is-small">
                 <i
                   :class="[
-                    post.hearted_users.includes(this.$store.state.user.id)
+                    post.hearted_users.includes($store.state.user.id)
                       ? 'has-text-danger'
                       : '',
                     'has-text-black',
                   ]"
                   class="fa fa-heart"
-                ></i>
+                />
               </span>
               <small class="p-1"> {{ post.hearts }}</small>
             </a>
           </div>
           <div class="level-right">
             <a
-              v-if="post.author_id == this.$store.state.user.id"
-              @click="deletePost(post.id)"
+              v-if="post.author_id == $store.state.user.id"
               class="level-item"
+              @click="deletePost(post.id)"
             >
               <a href="#" class="dropdown-item">
-                <i class="fa fa-times" aria-hidden="true"></i>
+                <i class="fa fa-times" aria-hidden="true" />
               </a>
             </a>
           </div>
@@ -57,7 +57,7 @@ import { mapActions } from "vuex";
 export default {
   name: "Post",
   props: {
-    post: Object,
+    post: { type: Object, default: null },
   },
   methods: {
     ...mapActions(["deletePost", "toggleHeart"]),

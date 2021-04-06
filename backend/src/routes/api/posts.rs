@@ -21,7 +21,7 @@ async fn add(
     if !post::verify(post.content.clone()) {
         return HttpResponse::BadRequest().json(general::Error {
             status_code: "400".to_string(),
-            error: "Invalid request, make sure you dont have contents longer than 512 characters."
+            error: "Invalid request, make sure you dont have contents longer than 512 characters or just whitespace."
                 .to_string(),
         });
     }

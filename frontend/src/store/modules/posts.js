@@ -1,4 +1,5 @@
 import axios from "axios";
+import config from "../../config";
 
 const state = {
   posts: [],
@@ -11,7 +12,7 @@ const getters = {
 const actions = {
   async fetchPosts({ commit, rootState }) {
     const res = await axios.post(
-      "http://localhost:8083/api/post/posts",
+      `${config.url}/api/post/posts`,
       JSON.stringify({ offset: 0, limit: 25 }),
       {
         headers: {
@@ -24,7 +25,7 @@ const actions = {
   },
   async addPost({ commit, rootState }, post) {
     const res = await axios.post(
-      "http://localhost:8083/api/post/add",
+      `${config.url}/api/post/add`,
       JSON.stringify(post),
       {
         headers: {
@@ -37,7 +38,7 @@ const actions = {
     commit("newPost", res.data);
   },
   async deletePost({ commit, rootState }, id) {
-    const res = await axios.delete("http://localhost:8083/api/post/delete", {
+    const res = await axios.delete(`${config.url}/api/post/delete`, {
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${rootState.auth.token}`,
@@ -49,7 +50,7 @@ const actions = {
   },
   async toggleHeart({ commit, rootState }, id) {
     const res = await axios.post(
-      "http://localhost:8083/api/post/heart",
+      `${config.url}/api/post/heart`,
       JSON.stringify({ id: id }),
       {
         headers: {

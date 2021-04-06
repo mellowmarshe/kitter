@@ -16,6 +16,8 @@ services:
       context: "./frontend"
     restart: always
     tty: true
+    environment:
+      - PROD=true
     ports:
       - "8084:8084"
     networks:

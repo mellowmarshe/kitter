@@ -1,54 +1,56 @@
 <template>
   <div v-if="isShown" class="modal is-justify-content-center is-flex" hidden>
-    <div class="modal-background"></div>
+    <div class="modal-background" />
     <div class="modal-content mt-15">
-      <form @submit="onSubmit" class="box mt-15" id="post-form">
+      <Errors />
+      <form id="post-form" class="box mt-15" @submit="onSubmit">
         <div class="field">
           <label class="label">Content</label>
           <div class="control">
             <textarea
-              class="textarea"
-              v-model="content"
               id="post-content"
+              v-model="content"
+              class="textarea"
               name="content"
               placeholder="Post content; up to 512 characters."
-            ></textarea>
+            />
           </div>
         </div>
         <input class="button is-black" type="submit" value="Post" />
         <button
-          @click="toggleShown"
-          class="modal-close is-large"
           id="post-close"
+          class="modal-close is-large"
           aria-label="close"
-        ></button>
+          @click="toggleShown"
+        />
       </form>
     </div>
   </div>
   <button
-    @click="toggleShown"
+    id="post-button"
     class="button is-black ml-4"
     value="post"
-    id="post-button"
     href="#"
+    @click="toggleShown"
   >
-    <i class="fa fa-plus"></i>
+    <i class="fa fa-plus" />
   </button>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import Errors from "./Errors.vue";
 
 export default {
   name: "NewPostModal",
+  components: { Errors },
   data() {
     return {
       isShown: false,
     };
   },
-  components: {},
   methods: {
-    ...mapActions(["addPost"]),
+    ...mapActions(["addPost", "addError", "deleteAllErrors"]),
     async onSubmit(e) {
       e.preventDefault();
 
@@ -58,12 +60,18 @@ export default {
 
       this.content = "";
 
-      this.addPost(post);
-
-      this.toggleShown();
+      this.addPost(post).then(
+        () => {
+          this.toggleShown();
+        },
+        (err) => {
+          this.addError(err);
+        }
+      );
     },
 
     async toggleShown() {
+      this.deleteAllErrors();
       this.isShown = !this.isShown;
     },
   },

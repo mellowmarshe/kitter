@@ -1,6 +1,8 @@
 <template>
-  <div :key="post.id" v-for="post in getPosts">
-    <Post :post="post" />
+  <div>
+    <div v-for="post in getPosts" :key="post.id">
+      <Post :post="post" />
+    </div>
   </div>
 </template>
 
@@ -20,14 +22,14 @@ export default {
     };
   },
   computed: mapGetters(["getPosts"]),
+  created() {
+    this.fetchPosts();
+  },
   methods: {
     ...mapActions(["fetchPosts"]),
     async addPost(post) {
       this.posts = [...this.posts, post];
     },
-  },
-  created() {
-    this.fetchPosts();
   },
 };
 </script>

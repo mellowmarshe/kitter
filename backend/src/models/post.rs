@@ -39,6 +39,8 @@ pub fn verify(content: Option<String>) -> bool {
         if c.len() > 512 {
             return false;
         }
+    } else {
+        return false;
     }
 
     true

@@ -1,4 +1,5 @@
 import axios from "axios";
+import config from "../../config";
 
 const state = {
   username: "",
@@ -12,7 +13,7 @@ const getters = {
 
 const actions = {
   async fetchUser({ commit, rootState }) {
-    const res = await axios.get("http://localhost:8083/api/user/me", {
+    const res = await axios.get(`${config.url}/api/user/me`, {
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${rootState.auth.token}`,
@@ -20,6 +21,15 @@ const actions = {
     });
 
     commit("setUser", res.data);
+  },
+  async registerUser({ rootState }, login) {
+    await axios.post(`${config.url}/api/user/register`, JSON.stringify(login), {
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    console.log(rootState);
   },
 };
 

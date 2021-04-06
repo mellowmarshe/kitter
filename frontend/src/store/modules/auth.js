@@ -1,4 +1,5 @@
 import axios from "axios";
+import config from "../../config";
 
 const state = {
   token: "",
@@ -11,7 +12,7 @@ const getters = {
 const actions = {
   async fetchToken({ commit }, user) {
     const res = await axios.post(
-      "http://localhost:8083/api/user/login",
+      `${config.url}/api/user/login`,
       JSON.stringify(user),
       {
         headers: {

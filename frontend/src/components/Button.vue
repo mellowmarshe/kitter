@@ -1,12 +1,14 @@
 <template>
-  <button @click="onClick()" class="button is-black">{{ text }}</button>
+  <button class="button is-black" @click="onClick()">
+    {{ text }}
+  </button>
 </template>
 
 <script>
 export default {
   name: "Button",
   props: {
-    text: String,
+    text: { type: String, default: "" },
   },
   methods: {
     onClick() {

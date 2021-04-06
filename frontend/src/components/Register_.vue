@@ -1,64 +1,81 @@
 <template>
-    <div id="errors"></div>
-    <form @submit="onSubmit" class="box mt-15" id="login-form">
+  <div>
+    <Errors />
+    <form id="login-form" class="box mt-15" @submit="onSubmit">
+      <div class="field">
+        <label class="label">Username</label>
+        <div class="control">
+          <input
+            v-model="username"
+            class="input"
+            name="username"
+            type="text"
+            placeholder=""
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+          <input
+            v-model="email"
+            class="input"
+            name="email"
+            type="email"
+            placeholder=""
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input
+            v-model="password"
+            class="input"
+            name="password"
+            type="password"
+            placeholder=""
+          />
+        </div>
+      </div>
 
-        <div class="field">
-            <label class="label">Username</label>
-            <div class="control">
-                <input class="input" v-model="username" name="username" type="text" placeholder="">
-            </div>
-            <small>Usernames must be between 3 and 32 characters. They can contain 1-9, a-Z, . and \_. They must
-                start
-                with a-Z.</small>
-        </div>
-        <div class="field">
-            <label class="label">Email</label>
-            <div class="control">
-                <input class="input" v-model="email" name="email" type="email" placeholder="">
-            </div>
-        </div>
-        <div class="field">
-            <label class="label">Password</label>
-            <div class="control">
-                <input class="input" v-model="password" name="password" type="password" placeholder="">
-            </div>
-            <small>Password must be atleast 8 characters with an uppercase, lowercase and number. Special
-                characters are
-                allowed.</small>
-        </div>
-
-        <input class="button is-black" type="submit" value="Login">
+      <input class="button is-black" type="submit" value="Register" />
     </form>
+  </div>
 </template>
 
 <script>
-    import axios from 'axios';
+import { mapActions } from "vuex";
 
-    export default {
-        name: "Register_",
-        components: {},
-        methods: {
-            async onSubmit(e) {
-                e.preventDefault()
+import Errors from "./Errors.vue";
 
-                const login = {
-                    username: this.username,
-                    password: this.password,
-                    email: this.email,
-                }
+export default {
+  // eslint-disable-next-line vue/component-definition-name-casing
+  name: "Register_",
+  components: { Errors },
+  methods: {
+    ...mapActions(["registerUser", "addError", "deleteAllErrors"]),
+    async onSubmit(e) {
+      e.preventDefault();
 
-                const res = await axios.post('http://localhost:8083/api/user/register', JSON.stringify(login), {
-                    headers: {
-                        'Content-type': 'application/json',
-                    },
-                })
-                console.log(res);
-                this.$router.push('/login');
-            },
+      const login = {
+        username: this.username,
+        password: this.password,
+        email: this.email,
+      };
+
+      this.registerUser(login).then(
+        () => {
+          this.deleteAllErrors();
+          this.$router.push("/login");
         },
-    };
+        (err) => {
+          this.addError(err);
+        }
+      );
+    },
+  },
+};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
