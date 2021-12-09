@@ -1,6 +1,9 @@
-## **Kitter**
-
-Kitter is a twitter like website written with Rust. [Actix](https://actix.rs/) is the web framework we use.
+<div align="center">
+    <h1>🐦 Kitter</h1>
+    Kitter is a twitter like website written with Rust
+    <br>
+    <br>
+</div>
 
 | Service              |   Description    |
 | :------------------- | :--------------: |
@@ -12,7 +15,7 @@ A few concepts/words we use to describe parts of the application:
 - Hearts
   - Hearts are what we call likes
 
-### ✨ **Usage** ✨
+# Usage
 
 Kitter uses [Docker](https://www.docker.com/) to deploy. This makes Kitter easier to deploy as it's one command for all services.
 
@@ -37,7 +40,7 @@ $ docker-compose up
 
 You should now be able to visit `http://localhost/` and see Kitter!
 
-### ✨ **API** ✨
+# API
 
 The base API route is `/api`
 
@@ -207,6 +210,11 @@ curl --header "Content-Type: application/json" \
   http://localhost:8083/api/user/me
 ```
 
-### ✨ **Information** ✨
+# Information
 
 Do not insert from the PSQL CLI unless the timezone is set to UTC. This will cause problems if it isn't UTC such as improper times.
+
+
+# License
+MIT
+
